@@ -304,7 +304,7 @@ for b in blocks:
         # Every trial, data will be saved just in case the experiment stops halfway.
         trials.saveAsWideText(
             os.path.join(
-                save_path, f"{timestamp}_trial={trials.thisN}_block={blocks.thisN}"
+                save_path, f"tmp_{timestamp}_block={blocks.thisN}"
             ),
             delim=",",
         )
