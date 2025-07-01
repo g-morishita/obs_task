@@ -1,0 +1,6 @@
+block,arm_img_0,arm_img_1,arm_img_2,partner_face_image,trial_path
+0,choices/choice13.png,choices/choice37.png,choices/choice38.png,faces/female/1.png,conditions/3/trial_middle_exp_0.csv
+1,choices/choice41.png,choices/choice14.png,choices/choice24.png,faces/female/2.png,conditions/3/trial_low_exp_2.csv
+2,choices/choice10.png,choices/choice50.png,choices/choice34.png,faces/female/4.png,conditions/3/trial_low_exp_1.csv
+3,choices/choice49.png,choices/choice47.png,choices/choice19.png,faces/female/5.png,conditions/3/trial_high_exp_2.csv
+4,choices/choice40.png,choices/choice7.png,choices/choice5.png,faces/female/3.png,conditions/3/trial_high_exp_1.csv
