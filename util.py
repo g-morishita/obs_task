@@ -25,6 +25,7 @@ def before_block_page(win, text):
 
     # wait for 9 or escape
     keys = event.waitKeys(keyList=["9", "escape"])
+
     if "escape" in keys:
         core.quit()
 
@@ -44,29 +45,43 @@ def before_block_page(win, text):
             core.quit()
 
 
-def wait_and_log_all(event_logger, duration, clock, b_t, t):
+def collect_response(
+    duration, trials, clock, choice_keys=("1", "2", "3", "4", "escape")
+):
     """
-    Wait for `duration` seconds, polling every 1 ms for keypresses,
-    and log each press (and its timestamp from `clock`) via trials.addData.
-
-    - duration : float seconds to wait
-    - trials   : your current TrialHandler
-    - prefix   : column prefix (e.g. 'obs', 'self', or 'any')
-    - clock    : a core.Clock() you’ve reset at block or trial start
+    For up to `duration` seconds:
+      • poll *all* keys every frame
+      • log each press (key & timestamp) into `trials` under
+          prefix + '_all_keys'  (comma-separated)
+          prefix + '_all_times' (comma-separated)
+      • as soon as a choice_key is hit, record it + RT (only once)
+    Returns (choice_key or None, choice_rt or None).
     """
+    # clear buffer, prep containers
+    event.clearEvents()
+    all_keys, all_times = [], []
+    choice = None
+    rt = None
     start = clock.getTime()
+
     while clock.getTime() - start < duration:
-        presses = event.getKeys(
-            keyList=["1", "2", "3", "4", "escape"], timeStamped=clock
-        )
+        presses = event.getKeys(timeStamped=clock)
         for key, ts in presses:
-            # 1) write a row to your separate log
-            event_logger.writerow(
-                [
-                    b_t,  # current block index
-                    t,  # current trial index
-                    key,
-                    f"{ts:.4f}",
-                ]
-            )
+            all_keys.append(key)
+            all_times.append(ts)
+            # first time we see a choice key, store it
+            if choice is None and key in choice_keys:
+                choice = key
+                rt = ts
+                # if you want to stop as soon as they choose, uncomment:
+                break
         core.wait(0.001)
+
+    # 1) log *all* keys & times as comma-lists
+    trials.addData(f"all_keys", "-".join(all_keys) if all_keys else "")
+    trials.addData(
+        f"all_times",
+        "-".join(f"{t:.4f}" for t in all_times) if all_times else "",
+    )
+
+    return choice, rt

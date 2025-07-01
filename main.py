@@ -4,7 +4,7 @@ import csv
 import os
 import time
 from window_setting import WINDOW_SIZE, FULLSCREEN, DEBUG
-from util import make_iti_duration, draw_all, before_block_page, wait_and_log_all
+from util import make_iti_duration, draw_all, before_block_page
 from stimuli_setting import *
 
 SAVE_BASE_FOLDER = "data"
@@ -77,7 +77,7 @@ main_exp_block_path = os.path.join(condition_path, f"block_for_{gender}.csv")
 # For logging
 event_log_path = os.path.join(save_path, f"{participant}_{timestamp}_events.csv")
 event_log_file = open(event_log_path, "w", newline="", encoding="utf-8")
-event_logger = csv.writer(event_log_file, delimiter="\t")
+event_logger = csv.writer(event_log_file, delimiter=",")
 
 # write the header for your event log
 event_logger.writerow(["block", "trial", "key", "time"])
@@ -134,8 +134,7 @@ for b in blocks:
         t_other_fix_on = blockClock.getTime()
         trials.addData("t_other_fix_on", t_other_fix_on)
         if DEBUG:
-            # core.wait(1.0)
-            wait_and_log_all(event_logger, 1.0, blockClock, blocks.thisN, trials.thisN)
+            core.wait(1.0)
         else:
             core.wait(itis[trials.thisN])
 
@@ -165,8 +164,7 @@ for b in blocks:
         t_other_options = blockClock.getTime()
         trials.addData("t_other_options", t_other_options)
         if DEBUG:
-            # core.wait(1.0)
-            wait_and_log_all(event_logger, 1.0, blockClock, blocks.thisN, trials.thisN)
+            core.wait(1.0)
         else:
             core.wait(OTHER_OPTION_DURATION)
 
@@ -191,8 +189,7 @@ for b in blocks:
         t_other_choice = blockClock.getTime()
         trials.addData("t_other_choice", t_other_choice)
         if DEBUG:
-            # core.wait(1.0)
-            wait_and_log_all(event_logger, 1.0, blockClock, blocks.thisN, trials.thisN)
+            core.wait(1.0)
         else:
             core.wait(OTHER_CHOICE_DURATION)
 
@@ -213,8 +210,7 @@ for b in blocks:
         t_other_outcome = blockClock.getTime()
         trials.addData("t_other_outcome", t_other_outcome)
         if DEBUG:
-            # core.wait(1.0)
-            wait_and_log_all(event_logger, 1.0, blockClock, blocks.thisN, trials.thisN)
+            core.wait(1.0)
         else:
             core.wait(OTHER_HIGHLIGHT_DURATION)
 
@@ -232,8 +228,7 @@ for b in blocks:
         t_self_fix_on = blockClock.getTime()
         trials.addData("self_fix_on", t_self_fix_on)
         if DEBUG:
-            # core.wait(1.0)
-            wait_and_log_all(event_logger, 1.0, blockClock, blocks.thisN, trials.thisN)
+            core.wait(1.0)
         else:
             core.wait(isis[trials.thisN])
 
@@ -267,7 +262,7 @@ for b in blocks:
 
         ################# 3. response  ################
         keys = event.waitKeys(
-            maxWait=MAX_WAIT_SELF_CHOICE, keyList=["1", "2", "3", "escape"]
+            maxWait=MAX_WAIT_SELF_CHOICE, keyList=["1", "2", "3", "4", "escape"]
         )
 
         if keys:
@@ -302,10 +297,7 @@ for b in blocks:
             t_self_highlight_on = blockClock.getTime()
             trials.addData("t_self_highlight_on", t_self_highlight_on)
             if DEBUG:
-                # core.wait(1.0)
-                wait_and_log_all(
-                    event_logger, 1.0, blockClock, blocks.thisN, trials.thisN
-                )
+                core.wait(1.0)
             else:
                 core.wait(SELF_HIGHLIGHT_DURATION)
 
