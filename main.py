@@ -143,13 +143,6 @@ for b in blocks:
         # the 1st stimulus goes to 0th slot (the leftmost),
         # and the 2nd stimulus goes to 1st slot (the middle).
 
-        # example order = [2, 0, 1]
-        inverse_order = [None] * len(order)
-        for stim_idx, slot_idx in enumerate(order):
-            inverse_order[slot_idx] = stim_idx
-        # now inverse_order == [1, 2, 0]
-        # meaning slot 0 → stim 1, slot 1 → stim 2, slot 2 → stim 0
-
         # now place each stim in its designated slot
         for stim_idx, slot_idx in enumerate(order):
             stimuli[stim_idx].pos = STIM_SLOT_POSITIONS[slot_idx]
@@ -224,7 +217,8 @@ for b in blocks:
         trials.addData("self_choice", "")
         trials.addData("t_self_highlight_on", "")
 
-        ################# 1. fixation ################
+        ################# 1. fixation################
+
         fixation.draw()
         win.flip()
         t_self_fix_on = blockClock.getTime()
@@ -237,7 +231,14 @@ for b in blocks:
         ################# 2. shuffle the order of stimuli ################
         # parse your CSV field into a list of ints
         order = [int(x) for x in trial["self_randomized_img_order"].split(",")]
-        # e.g. "0,2,1" → [0, 2, 1]
+        # e.g. "2,0,1" → [2, 0, 1]
+
+        # example order = [2, 0, 1]
+        inverse_order = [None] * len(order)
+        for stim_idx, slot_idx in enumerate(order):
+            inverse_order[slot_idx] = stim_idx
+        # now inverse_order == [1, 2, 0]
+        # meaning slot 0 → stim 1, slot 1 → stim 2, slot 2 → stim 0
 
         # now place each stim in its designated slot
         for stim_idx, slot_idx in enumerate(order):
