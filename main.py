@@ -301,6 +301,11 @@ for b in blocks:
             os.path.join(save_path, f"{timestamp}_{blocks.thisN}"), delim="\t"
         )
 
+    # Before the block finished, the fixation is shown for 10 seconds.
+    fixation.draw()
+    win.flip()
+    core.wait(LAST_FIXATION_DURATION)
+
     # wait for 5 to move on to the next block or exec to quit esc
     trials.saveAsWideText(
         os.path.join(save_path, f"{timestamp}_{blocks.thisN}.csv"), delim="\t"
