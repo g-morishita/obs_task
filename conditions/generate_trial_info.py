@@ -28,14 +28,20 @@ class q_learning:
 
 
 def create_choice_reward_history(model, n_trials, reward_probs):
-    choices, rewards = [], []
-    model.reset()
-    for _ in range(n_trials):
-        c = model.make_choice()
-        r = int(np.random.rand() < reward_probs[c])
-        model.learn(c, r)
-        choices.append(c)
-        rewards.append(r)
+    while True:
+        choices, rewards = [], []
+        model.reset()
+        for _ in range(n_trials):
+            c = model.make_choice()
+            r = int(np.random.rand() < reward_probs[c])
+            model.learn(c, r)
+            choices.append(c)
+            rewards.append(r)
+
+        # If there's any option that the partner has never chosen
+        # Get back to the loop.
+        if len(np.unique(choices)) == 3:
+            break
     return choices, rewards
 
 
@@ -43,7 +49,7 @@ def create_randomized_order(n_trials, n_options=3):
     orders = []
     for _ in range(n_trials):
         perm = np.random.permutation(n_options)
-        orders.append(",".join(map(str, perm)))
+        orders.append("-".join(map(str, perm)))
     return orders
 
 
@@ -82,8 +88,8 @@ def main(seed):
 
 
 # Settings
-n_trials = 3
-practice_n_trials = 3
+n_trials = 30
+practice_n_trials = 10
 reward_probs = [0.25, 0.5, 0.75]
 init_q = [0.5, 0.5, 0.5]
 alpha = 0.3

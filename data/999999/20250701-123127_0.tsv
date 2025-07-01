@@ -1,8 +1,0 @@
-﻿TrialNumber	trial	partner_choice	partner_reward	obs_randomized_img_order	self_randomized_img_order	ran	order	t_other_fix_on	t_other_options	t_other_choice	t_other_outcome	t_self_choice_on	self_choice	t_self_highlight_on	self_fix_on	t_self_options_on
-1	0	0	0	0,1,2	1,2,0	1.0	0.0	0.0030193333368515596	7.245528125000419	9.252275541672134	13.260240458337648				15.2629769999985	24.51989437500015
-2	1	2	1	2,1,0	0,1,2	0.0	--	--	--	--	--	--	--	--	--	--
-3	2	2	1	0,1,2	0,2,1	0.0	--	--	--	--	--	--	--	--	--	--
-﻿TrialNumber	trial	partner_choice	partner_reward	obs_randomized_img_order	self_randomized_img_order	ran	order	t_other_fix_on	t_other_options	t_other_choice	t_other_outcome	t_self_choice_on	self_choice	t_self_highlight_on	self_fix_on	t_self_options_on
-1	0	0	0	0,1,2	1,2,0	1.0	0.0	0.0030193333368515596	7.245528125000419	9.252275541672134	13.260240458337648				15.2629769999985	24.51989437500015
-2	1	2	1	2,1,0	0,1,2	1.0	1.0	27.52589370833448	32.00211354166822	34.0074979583369	38.01818025000102				40.02142399999866	43.07670800000051
-3	2	2	1	0,1,2	0,2,1	0.0	--	--	--	--	--	--	--	--	--	--

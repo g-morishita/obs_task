@@ -1,4 +1,0 @@
-﻿TrialNumber	trial	partner_choice	partner_reward	obs_randomized_img_order	self_randomized_img_order	ran	order	other_fix_on	t_other_options	t_other_choice	t_other_outcome	self_choice_on	self_choice	self_highlight_on	self_fix_on	self_options_on
-1	0	2	0	2,0,1	1,0,2	1.0	0.0	0.0029401666688499972	1.0508719999997993	2.0537571666645817	3.0611492916650604	5.543322874997102	1	5.546876333333785	4.063204333331669	5.075282999998308
-2	1	1	0	0,1,2	2,0,1	0.0	--	--	--	--	--	--	--	--	--	--
-3	2	0	0	0,2,1	1,2,0	0.0	--	--	--	--	--	--	--	--	--	--

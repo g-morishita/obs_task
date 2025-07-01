@@ -11,9 +11,12 @@ def randomize_arm_images(n_blocks, n_choices=3, path="choices"):
     """
     total_needed = n_choices * n_blocks
     choices = np.random.choice(range(1, 52), size=total_needed, replace=False)
+    practice_files = np.array(
+        [os.path.join(path, f"choice{i}.png") for i in ["52", "53", "54"]]
+    ).reshape(n_choices, -1)
     files = [os.path.join(path, f"choice{i}.png") for i in choices]
-    # reshape: each inner list corresponds to one choice across blocks
-    return np.array(files).reshape(n_choices, n_blocks).tolist()
+    files = np.array(files).reshape(n_choices, -1)
+    return np.hstack([practice_files, files])
 
 
 def randomize_trial_paths(n_blocks, seed, test=False):
@@ -28,7 +31,7 @@ def randomize_trial_paths(n_blocks, seed, test=False):
         f"conditions/{seed}/{prefix}_high_exp_{i + 1}.csv" for i in range(half)
     ] + [f"conditions/{seed}/{prefix}_low_exp_{i + 1}.csv" for i in range(half)]
     return [f"conditions/{seed}/{prefix}_middle_exp_0.csv"] + np.random.choice(
-        candidates, size=n_blocks - 1, replace=False
+        candidates, size=n_blocks, replace=False
     ).tolist()
 
 
@@ -36,10 +39,12 @@ def build_block_df(n_blocks, arm_images, face_gender, trial_paths):
     """
     Constructs a DataFrame for a given gender or test block.
     """
-    partner_face_images = [f"faces/{face_gender}/{i+1}.png" for i in range(1, n_blocks)]
+    partner_face_images = [
+        f"faces/{face_gender}/{i+1}.png" for i in range(1, n_blocks + 1)
+    ]
     np.random.shuffle(partner_face_images)
     data = {
-        "block": list(range(n_blocks)),
+        "block": list(range(n_blocks + 1)),
         # arm_images is list of lists: [choice0_list, choice1_list, ...]
         **{f"arm_img_{i}": arm_images[i] for i in range(len(arm_images))},
         "partner_face_image": [f"faces/{face_gender}/1.png"] + partner_face_images,
@@ -50,8 +55,6 @@ def build_block_df(n_blocks, arm_images, face_gender, trial_paths):
 
 def save_blocks(n_blocks, seed):
     np.random.seed(seed)
-
-    n_blocks = n_blocks + 1  # Add a practice block
 
     # 1) Randomize arm images and trial paths
     arm_images = randomize_arm_images(n_blocks)

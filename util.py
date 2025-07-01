@@ -42,3 +42,31 @@ def before_block_page(win, text):
         keys = event.waitKeys(keyList=["5", "escape"])
         if "escape" in keys:
             core.quit()
+
+
+def wait_and_log_all(event_logger, duration, clock, b_t, t):
+    """
+    Wait for `duration` seconds, polling every 1 ms for keypresses,
+    and log each press (and its timestamp from `clock`) via trials.addData.
+
+    - duration : float seconds to wait
+    - trials   : your current TrialHandler
+    - prefix   : column prefix (e.g. 'obs', 'self', or 'any')
+    - clock    : a core.Clock() you’ve reset at block or trial start
+    """
+    start = clock.getTime()
+    while clock.getTime() - start < duration:
+        presses = event.getKeys(
+            keyList=["1", "2", "3", "4", "escape"], timeStamped=clock
+        )
+        for key, ts in presses:
+            # 1) write a row to your separate log
+            event_logger.writerow(
+                [
+                    b_t,  # current block index
+                    t,  # current trial index
+                    key,
+                    f"{ts:.4f}",
+                ]
+            )
+        core.wait(0.001)

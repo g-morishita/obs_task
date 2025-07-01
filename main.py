@@ -1,19 +1,15 @@
 import pandas as pd
 from psychopy import visual, core, gui, data, event
-from psychopy.hardware import keyboard
+import csv
 import os
 import time
 from window_setting import WINDOW_SIZE, FULLSCREEN, DEBUG
-from util import make_iti_duration, draw_all, before_block_page
+from util import make_iti_duration, draw_all, before_block_page, wait_and_log_all
 from stimuli_setting import *
 
 SAVE_BASE_FOLDER = "data"
 
 # ───────────────────────── 1. PRE-EXPERIMENT DIALOG ────────────────────────────
-# register escape to quit immediately
-kb = keyboard.Keyboard()
-
-
 while True:
     dlg = gui.Dlg(title="OL Task")
     dlg.addField("Participant ID:", "P001")
@@ -78,6 +74,13 @@ os.makedirs(save_path, exist_ok=True)
 timestamp = time.strftime("%Y%m%d-%H%M%S")
 main_exp_block_path = os.path.join(condition_path, f"block_for_{gender}.csv")
 
+# For logging
+event_log_path = os.path.join(save_path, f"{participant}_{timestamp}_events.csv")
+event_log_file = open(event_log_path, "w", newline="", encoding="utf-8")
+event_logger = csv.writer(event_log_file, delimiter="\t")
+
+# write the header for your event log
+event_logger.writerow(["block", "trial", "key", "time"])
 
 # ───────────────────────── 3. SET UP WINDOW & BASIC STIMULI ──────────────────────────
 # create a window
@@ -92,7 +95,7 @@ blocks = data.TrialHandler(
 )
 
 # ───────────────────────── 4. EXPERIMENT  ──────────────────────────
-before_block_page(win)
+before_block_page(win, "Experiment")
 
 # create a clock for block‐relative timing
 blockClock = core.Clock()
@@ -131,13 +134,14 @@ for b in blocks:
         t_other_fix_on = blockClock.getTime()
         trials.addData("t_other_fix_on", t_other_fix_on)
         if DEBUG:
-            core.wait(1.0)
+            # core.wait(1.0)
+            wait_and_log_all(event_logger, 1.0, blockClock, blocks.thisN, trials.thisN)
         else:
             core.wait(itis[trials.thisN])
 
         ################# 2. shuffle the order of stimuli ################
         # parse your CSV field into a list of ints
-        order = [int(x) for x in trial["obs_randomized_img_order"].split(",")]
+        order = [int(x) for x in trial["obs_randomized_img_order"].split("-")]
         # e.g. "2,0,1" → [2, 0, 1]
         # This list means the 0th stimulus goes to the 3rd slot (the rightmost),
         # the 1st stimulus goes to 0th slot (the leftmost),
@@ -161,7 +165,8 @@ for b in blocks:
         t_other_options = blockClock.getTime()
         trials.addData("t_other_options", t_other_options)
         if DEBUG:
-            core.wait(1.0)
+            # core.wait(1.0)
+            wait_and_log_all(event_logger, 1.0, blockClock, blocks.thisN, trials.thisN)
         else:
             core.wait(OTHER_OPTION_DURATION)
 
@@ -186,7 +191,8 @@ for b in blocks:
         t_other_choice = blockClock.getTime()
         trials.addData("t_other_choice", t_other_choice)
         if DEBUG:
-            core.wait(1.0)
+            # core.wait(1.0)
+            wait_and_log_all(event_logger, 1.0, blockClock, blocks.thisN, trials.thisN)
         else:
             core.wait(OTHER_CHOICE_DURATION)
 
@@ -207,7 +213,8 @@ for b in blocks:
         t_other_outcome = blockClock.getTime()
         trials.addData("t_other_outcome", t_other_outcome)
         if DEBUG:
-            core.wait(1.0)
+            # core.wait(1.0)
+            wait_and_log_all(event_logger, 1.0, blockClock, blocks.thisN, trials.thisN)
         else:
             core.wait(OTHER_HIGHLIGHT_DURATION)
 
@@ -225,13 +232,14 @@ for b in blocks:
         t_self_fix_on = blockClock.getTime()
         trials.addData("self_fix_on", t_self_fix_on)
         if DEBUG:
-            core.wait(1.0)
+            # core.wait(1.0)
+            wait_and_log_all(event_logger, 1.0, blockClock, blocks.thisN, trials.thisN)
         else:
             core.wait(isis[trials.thisN])
 
         ################# 2. shuffle the order of stimuli ################
         # parse your CSV field into a list of ints
-        order = [int(x) for x in trial["self_randomized_img_order"].split(",")]
+        order = [int(x) for x in trial["self_randomized_img_order"].split("-")]
         # e.g. "2,0,1" → [2, 0, 1]
 
         # example order = [2, 0, 1]
@@ -294,23 +302,31 @@ for b in blocks:
             t_self_highlight_on = blockClock.getTime()
             trials.addData("t_self_highlight_on", t_self_highlight_on)
             if DEBUG:
-                core.wait(1.0)
+                # core.wait(1.0)
+                wait_and_log_all(
+                    event_logger, 1.0, blockClock, blocks.thisN, trials.thisN
+                )
             else:
                 core.wait(SELF_HIGHLIGHT_DURATION)
 
         # Every trial, data will be saved just in case the experiment stops halfway.
         trials.saveAsWideText(
-            os.path.join(save_path, f"{timestamp}_{blocks.thisN}"), delim="\t"
+            os.path.join(
+                save_path, f"{timestamp}_trial={trials.thisN}_block={blocks.thisN}"
+            ),
+            delim=",",
         )
 
     # Before the block finished, the fixation is shown for 10 seconds.
     fixation.draw()
     win.flip()
     core.wait(LAST_FIXATION_DURATION)
+    t_complete_block = blockClock.getTime()
+    trials.addData("t_complete", t_complete_block)
 
     # wait for 5 to move on to the next block or exec to quit esc
     trials.saveAsWideText(
-        os.path.join(save_path, f"{timestamp}_{blocks.thisN}.csv"), delim="\t"
+        os.path.join(save_path, f"{timestamp}_block={blocks.thisN}"), delim=","
     )
     before_block_page(win, text="completed")
 
