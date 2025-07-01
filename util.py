@@ -13,7 +13,7 @@ def draw_all(visuals):
         v.draw()
 
 
-def before_block_page(win, debug, text="Ready"):
+def before_block_page(win, text):
     pause_text = visual.TextStim(
         win,
         text=text,
@@ -23,7 +23,22 @@ def before_block_page(win, debug, text="Ready"):
     pause_text.draw()
     win.flip()
 
-    # wait for 5 or escape
-    keys = event.waitKeys(keyList=["5", "escape"])
-    if ("escape" in keys) and debug:
+    # wait for 9 or escape
+    keys = event.waitKeys(keyList=["9", "escape"])
+    if "escape" in keys:
         core.quit()
+
+    if "9" in keys:
+        pause_text = visual.TextStim(
+            win,
+            text="Ready",
+            color="white",
+            height=0.05,
+        )
+        pause_text.draw()
+        win.flip()
+
+        # wait for 5 or escape
+        keys = event.waitKeys(keyList=["5", "escape"])
+        if "escape" in keys:
+            core.quit()

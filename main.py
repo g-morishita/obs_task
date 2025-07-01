@@ -92,7 +92,7 @@ blocks = data.TrialHandler(
 )
 
 # ───────────────────────── 4. EXPERIMENT  ──────────────────────────
-before_block_page(win, DEBUG)
+before_block_page(win)
 
 # create a clock for block‐relative timing
 blockClock = core.Clock()
@@ -290,7 +290,7 @@ for b in blocks:
             #  hold for a bit so the participant can see it
             win.flip()
             t_self_highlight_on = blockClock.getTime()
-            trials.addData("self_highlight_on", t_self_highlight_on)
+            trials.addData("t_self_highlight_on", t_self_highlight_on)
             if DEBUG:
                 core.wait(1.0)
             else:
@@ -310,7 +310,7 @@ for b in blocks:
     trials.saveAsWideText(
         os.path.join(save_path, f"{timestamp}_{blocks.thisN}.csv"), delim="\t"
     )
-    before_block_page(win, DEBUG, text="completed")
+    before_block_page(win, text="completed")
 
 # 5. Clean up
 win.close()
