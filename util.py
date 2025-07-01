@@ -2,7 +2,7 @@ import numpy as np
 from psychopy import visual, event, core
 
 
-def make_iti_duration(a=2.0, b=12.0, n_trials=30):
+def make_iti_duration(a=2.0, b=8.0, n_trials=30):
     itis = np.linspace(a, b, n_trials)  # M evenly-spaced values
     np.random.shuffle(itis)  # shuffle
     return itis

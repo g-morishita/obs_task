@@ -8,7 +8,7 @@ FACE_SLOT_POSITION = (0, 0.2)
 
 # Outcome position and size
 OUTCOME_SIZE = (0.15, 0.15)
-OUTCOME_SLOT_POSITION = (0, -0.25)
+OUTCOME_SLOT_POSITION = (0, -0.255)
 
 # Outcome highlight setting
 HIGHLIGHT_CHOSEN_GAP = (
@@ -18,7 +18,7 @@ HIGHLIGHT_LINE_WIDTH = 16
 
 # Stimuli duration
 OTHER_OPTION_DURATION = 2.0  # seconds
-OTHER_CHOICE_DURATION = 4.0  # seconds
+OTHER_CHOICE_DURATION = 3.0  # seconds
 OTHER_HIGHLIGHT_DURATION = 2.0  # seconds
 MAX_WAIT_SELF_CHOICE = 3.0  # seconds
-SELF_HIGHLIGHT_DURATION = 2.0  # seconds
+SELF_HIGHLIGHT_DURATION = 1.0  # seconds
