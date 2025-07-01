@@ -8,7 +8,7 @@ FACE_SLOT_POSITION = (0, 0.2)
 
 # Outcome position and size
 OUTCOME_SIZE = (0.15, 0.15)
-OUTCOME_SLOT_POSITION = (0, -0.2)
+OUTCOME_SLOT_POSITION = (0, -0.25)
 
 # Outcome highlight setting
 HIGHLIGHT_CHOSEN_GAP = 0.05  # size of the gap around each image, in norm units (adjust to taste)
