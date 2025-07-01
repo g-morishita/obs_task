@@ -214,7 +214,8 @@ for b in blocks:
         # ───────────────────────── Self Decision phase ──────────────────────────
         # initialize all self‐choice fields with blanks or a MISS code
         trials.addData("t_self_choice_on", "")
-        trials.addData("self_choice", "")
+        trials.addData("self_choice_stim_idx", "")
+        trials.addData("self_choice_pos_idx", "")
         trials.addData("t_self_highlight_on", "")
 
         ################# 1. fixation################
@@ -273,7 +274,8 @@ for b in blocks:
 
             t_self_choice_on = blockClock.getTime()
             trials.addData("t_self_choice_on", t_self_choice_on)
-            trials.addData("self_choice", int(self_stim_idx))
+            trials.addData("self_choice_stim_idx", int(self_stim_idx))
+            trials.addData("self_choice_pos_idx", choice_position_idx)
 
             # build a Rect that’s slightly bigger than the image
             frame = visual.Rect(
