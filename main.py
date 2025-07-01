@@ -3,7 +3,7 @@ from psychopy import visual, core, gui, data, event
 import csv
 import os
 import time
-from window_setting import WINDOW_SIZE, FULLSCREEN, DEBUG
+from window_setting import FULLSCREEN, DEBUG
 from util import make_iti_duration, draw_all, before_block_page
 from stimuli_setting import *
 
@@ -134,7 +134,7 @@ for b in blocks:
         t_other_fix_on = blockClock.getTime()
         trials.addData("t_other_fix_on", t_other_fix_on)
         if DEBUG:
-            core.wait(1.0)
+            core.wait(2.0)
         else:
             core.wait(itis[trials.thisN])
 
@@ -164,7 +164,7 @@ for b in blocks:
         t_other_options = blockClock.getTime()
         trials.addData("t_other_options", t_other_options)
         if DEBUG:
-            core.wait(1.0)
+            core.wait(2.0)
         else:
             core.wait(OTHER_OPTION_DURATION)
 
@@ -189,7 +189,7 @@ for b in blocks:
         t_other_choice = blockClock.getTime()
         trials.addData("t_other_choice", t_other_choice)
         if DEBUG:
-            core.wait(1.0)
+            core.wait(2.0)
         else:
             core.wait(OTHER_CHOICE_DURATION)
 
@@ -228,7 +228,7 @@ for b in blocks:
         t_self_fix_on = blockClock.getTime()
         trials.addData("self_fix_on", t_self_fix_on)
         if DEBUG:
-            core.wait(1.0)
+            core.wait(2.0)
         else:
             core.wait(isis[trials.thisN])
 
@@ -303,9 +303,7 @@ for b in blocks:
 
         # Every trial, data will be saved just in case the experiment stops halfway.
         trials.saveAsWideText(
-            os.path.join(
-                save_path, f"tmp_{timestamp}_block={blocks.thisN}"
-            ),
+            os.path.join(save_path, f"tmp_{timestamp}_block={blocks.thisN}"),
             delim=",",
         )
 
