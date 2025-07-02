@@ -64,14 +64,14 @@ for block in range(1, 3):
             warning_dlg.show()
             if not warning_dlg.OK:
                 core.quit()
-
-        trial_info = pd.read_csv(str(trial_file))
-        if not DEBUG and len(trial_info) != 30:
-            warning_dlg = gui.Dlg(title="Warning")
-            warning_dlg.addText(f"{trial_file} does not have 30 trials.")
-            warning_dlg.show()
-            if not warning_dlg.OK:
-                core.quit()
+        else:
+            trial_info = pd.read_csv(str(trial_file))
+            if not DEBUG and len(trial_info) != 30:
+                warning_dlg = gui.Dlg(title="Warning")
+                warning_dlg.addText(f"{trial_file} does not have 30 trials.")
+                warning_dlg.show()
+                if not warning_dlg.OK:
+                    core.quit()
 
 # make sure save directory exists
 save_path = SAVE_BASE_FOLDER / participant
