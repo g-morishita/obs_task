@@ -6,10 +6,12 @@ import time
 from window_setting import FULLSCREEN, DEBUG
 from util import make_iti_duration, draw_all, before_block_page
 from stimuli_setting import *
+from pathlib import Path
 
-SAVE_BASE_FOLDER = "data"
 
 # ───────────────────────── 1. PRE-EXPERIMENT DIALOG ────────────────────────────
+SAVE_BASE_FOLDER = Path("data")
+
 while True:
     dlg = gui.Dlg(title="OL Task")
     dlg.addField("Participant ID:", "P001")
@@ -17,21 +19,23 @@ while True:
     dlg.show()
     if not dlg.OK:
         core.quit()
+
     participant = dlg.data[0]
     gender = "male" if dlg.data[1] else "female"
 
-    # Check condition files are created.
-    condition_path = f"conditions/{participant}"
-    if os.path.exists(condition_path):
+    # Build the condition-directory path in an OS-agnostic way
+    condition_path = Path("conditions") / participant
+
+    if condition_path.exists():
         break
     else:
         warning_dlg = gui.Dlg(title="Warning")
         warning_dlg.addText("It looks like condition files have not been created.")
         warning_dlg.show()
 
-# Check condition files are correctly created.
-trial_file = os.path.join(condition_path, f"trial_middle_exp_0.csv")
-if not os.path.exists(trial_file):
+# Check the “middle” trial file
+middle_file = condition_path / "trial_middle_exp_0.csv"
+if not middle_file.exists():
     warning_dlg = gui.Dlg(title="Warning")
     warning_dlg.addText(
         "It looks like condition files have not been created. Click cancel to finish"
@@ -40,18 +44,19 @@ if not os.path.exists(trial_file):
     if not warning_dlg.OK:
         core.quit()
 
-    trial_info = pd.read_csv(trial_file)
-    if not DEBUG and len(trial_info) != 10:
-        warning_dlg = gui.Dlg(title="Warning")
-        warning_dlg.addText(f"{trial_file} does not have 10 trials.")
-        warning_dlg.show()
-        if not warning_dlg.OK:
-            core.quit()
+trial_info = pd.read_csv(str(middle_file))
+if not DEBUG and len(trial_info) != 10:
+    warning_dlg = gui.Dlg(title="Warning")
+    warning_dlg.addText(f"{middle_file} does not have 10 trials.")
+    warning_dlg.show()
+    if not warning_dlg.OK:
+        core.quit()
 
-for b in range(1, 3):
-    for exp in ["high", "low"]:
-        trial_file = os.path.join(condition_path, f"trial_{exp}_exp_{b}.csv")
-        if not os.path.exists(trial_file):
+# Check each block’s high/low files
+for block in range(1, 3):
+    for level in ("high", "low"):
+        trial_file = condition_path / f"trial_{level}_exp_{block}.csv"
+        if not trial_file.exists():
             warning_dlg = gui.Dlg(title="Warning")
             warning_dlg.addText(
                 "It looks like condition files have not been created. Click cancel to finish"
@@ -60,7 +65,7 @@ for b in range(1, 3):
             if not warning_dlg.OK:
                 core.quit()
 
-        trial_info = pd.read_csv(trial_file)
+        trial_info = pd.read_csv(str(trial_file))
         if not DEBUG and len(trial_info) != 30:
             warning_dlg = gui.Dlg(title="Warning")
             warning_dlg.addText(f"{trial_file} does not have 30 trials.")
@@ -69,18 +74,12 @@ for b in range(1, 3):
                 core.quit()
 
 # make sure save directory exists
-save_path = os.path.join(SAVE_BASE_FOLDER, participant)
-os.makedirs(save_path, exist_ok=True)
+save_path = SAVE_BASE_FOLDER / participant
+save_path.mkdir(parents=True, exist_ok=True)
+
+# timestamp and main block path
 timestamp = time.strftime("%Y%m%d-%H%M%S")
-main_exp_block_path = os.path.join(condition_path, f"block_for_{gender}.csv")
-
-# For logging
-event_log_path = os.path.join(save_path, f"{participant}_{timestamp}_events.csv")
-event_log_file = open(event_log_path, "w", newline="", encoding="utf-8")
-event_logger = csv.writer(event_log_file, delimiter=",")
-
-# write the header for your event log
-event_logger.writerow(["block", "trial", "key", "time"])
+main_exp_block_path = condition_path / f"block_for_{gender}.csv"
 
 # ───────────────────────── 3. SET UP WINDOW & BASIC STIMULI ──────────────────────────
 # create a window
@@ -91,7 +90,9 @@ fixation = visual.TextStim(win, text="+", color="white", height=0.1)
 
 # import block information from csv file
 blocks = data.TrialHandler(
-    nReps=1, method="sequential", trialList=data.importConditions(main_exp_block_path)
+    nReps=1,
+    method="sequential",
+    trialList=data.importConditions(str(main_exp_block_path)),
 )
 
 # ───────────────────────── 4. EXPERIMENT  ──────────────────────────
@@ -120,7 +121,7 @@ for b in blocks:
     # Make trials
     trial_path = b["trial_path"]
     trials = data.TrialHandler(
-        nReps=1, method="sequential", trialList=data.importConditions(trial_path)
+        nReps=1, method="sequential", trialList=data.importConditions(str(trial_path))
     )
 
     # ─── reset at block start ───
